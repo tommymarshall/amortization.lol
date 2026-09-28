@@ -1,0 +1,149 @@
+<div id="mortgage-orbit" aria-label="Mortgage comparison design concept">
+  <style>
+    #mortgage-orbit{--mo-gold:#efdfb5;--mo-lilac:#bdb4f4;--mo-text:#f2eedf;--mo-muted:#a6adbf;box-sizing:border-box;background:radial-gradient(ellipse at 70% 35%,#172137 0%,#0c1425 48%,#090f1e 100%);color:var(--mo-text);font-family:'Instrument Sans',Arial,sans-serif;border-radius:18px;padding:28px;overflow:hidden;color-scheme:dark}
+    #mortgage-orbit *{box-sizing:border-box}
+    #mortgage-orbit .mo-eyebrow{font-size:10px;letter-spacing:2.4px;color:var(--mo-muted);text-transform:uppercase}
+    #mortgage-orbit h2{font-weight:400;font-size:32px;letter-spacing:-1.2px;margin:10px 0 20px;line-height:1.15;color:var(--mo-text)}
+    #mortgage-orbit h2 em{font-family:Georgia,serif;color:var(--mo-gold);font-weight:400}
+    #mortgage-orbit .mo-scenarios{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+    #mortgage-orbit .mo-name{display:flex;align-items:center;gap:8px;font-size:13px;margin-bottom:7px}
+    #mortgage-orbit .mo-dot{display:inline-block;width:7px;height:7px;background:var(--mo-gold);border-radius:50%;box-shadow:0 0 12px #efdfb550;flex-shrink:0}
+    #mortgage-orbit .mo-new .mo-dot{background:var(--mo-lilac);box-shadow:0 0 12px #bdb4f450}
+    #mortgage-orbit .mo-amount{font-size:29px;font-weight:400;letter-spacing:-1px;font-variant-numeric:tabular-nums}
+    #mortgage-orbit .mo-amount small{font-size:12px;color:var(--mo-muted);letter-spacing:0}
+    #mortgage-orbit .mo-meta{font-size:11px;color:var(--mo-muted);line-height:1.6;margin-top:4px}
+    #mortgage-orbit .mo-chart-header{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin-top:24px}
+    #mortgage-orbit .mo-chart-header span{font-size:11px;color:var(--mo-muted)}
+    #mortgage-orbit .mo-chart-header strong{font-size:13px;font-weight:400;font-variant-numeric:tabular-nums}
+    #mortgage-orbit .mo-chart{width:100%;height:265px;display:block;touch-action:pan-y}
+    #mortgage-orbit .mo-chart text{font-family:inherit;font-size:11px;fill:var(--mo-muted)}
+    #mortgage-orbit .mo-legend{display:flex;gap:16px;flex-wrap:wrap;color:var(--mo-muted);font-size:11px;margin-bottom:22px}
+    #mortgage-orbit .mo-sample{display:inline-block;width:19px;border-top:1.5px solid #a6adbf;vertical-align:middle;margin-right:6px}
+    #mortgage-orbit .mo-dash{border-top-style:dashed}
+    #mortgage-orbit .mo-controls{display:grid;grid-template-columns:1fr 1fr;gap:26px;margin-bottom:24px}
+    #mortgage-orbit label{display:flex;justify-content:space-between;gap:8px;font-size:12px;margin-bottom:8px;color:var(--mo-muted)}
+    #mortgage-orbit output{font-variant-numeric:tabular-nums;color:var(--mo-text)}
+    #mortgage-orbit input[type=range]{width:100%;margin:0;accent-color:var(--mo-gold);height:26px}
+    #mortgage-orbit #mo-rate{accent-color:var(--mo-lilac)}
+    #mortgage-orbit .mo-details{display:grid;grid-template-columns:1fr 1fr;gap:24px;border-top:1px solid #ffffff14;padding-top:18px}
+    #mortgage-orbit .mo-detail-head{display:flex;justify-content:space-between;font-size:12px;margin-bottom:12px;gap:8px;flex-wrap:wrap}
+    #mortgage-orbit .mo-detail-head span{color:var(--mo-muted)}
+    #mortgage-orbit .mo-bar-track{height:9px;background:#ffffff07;border-radius:6px;overflow:hidden;margin-bottom:12px}
+    #mortgage-orbit .mo-bar{display:flex;height:100%;transition:width .2s ease}
+    #mortgage-orbit .mo-principal{height:100%;background:var(--mo-gold);transition:width .2s ease}
+    #mortgage-orbit .mo-interest{height:100%;background:#efdfb540;transition:width .2s ease}
+    #mortgage-orbit .mo-new .mo-principal{background:var(--mo-lilac)}
+    #mortgage-orbit .mo-new .mo-interest{background:#bdb4f440}
+    #mortgage-orbit .mo-line{display:flex;justify-content:space-between;gap:8px;margin-top:8px;font-size:12px;color:var(--mo-muted)}
+    #mortgage-orbit .mo-line b{font-weight:400;font-variant-numeric:tabular-nums;color:var(--mo-text)}
+    #mortgage-orbit .mo-foot{margin-top:22px;font-size:10px;line-height:1.6;color:var(--mo-muted)}
+    @media(max-width:480px){#mortgage-orbit{padding:20px 16px}#mortgage-orbit h2{font-size:28px}#mortgage-orbit .mo-scenarios{gap:12px}#mortgage-orbit .mo-amount{font-size:25px}#mortgage-orbit .mo-controls{grid-template-columns:1fr;gap:12px}#mortgage-orbit .mo-details{gap:15px}#mortgage-orbit .mo-chart-header{gap:7px}}
+    @media(prefers-reduced-motion:reduce){#mortgage-orbit *{transition:none!important}}
+  </style>
+  <div class="mo-eyebrow">Interaction study · Buy today</div>
+  <h2>Two homes. Different <em>futures.</em></h2>
+  <div class="mo-scenarios">
+    <div><div class="mo-name"><i class="mo-dot"></i>Keep your mortgage</div><div class="mo-amount"><span id="mo-pay-a"></span><small> / mo</small></div><div class="mo-meta">$400,000 original loan · 2%<br>30-year term · 5 years paid</div></div>
+    <div class="mo-new"><div class="mo-name"><i class="mo-dot"></i>Buy today</div><div class="mo-amount"><span id="mo-pay-b"></span><small> / mo</small></div><div class="mo-meta">$600,000 home · $120,000 down<br>$480,000 loan · new 30-year term</div></div>
+  </div>
+  <div class="mo-chart-header"><span>Monthly principal + interest · USD</span><strong id="mo-gap"></strong></div>
+  <svg class="mo-chart" role="img" aria-label="Overlaid mortgage payments and interest portions across thirty years from today"></svg>
+  <div class="mo-legend"><span><i class="mo-sample"></i>Total payment</span><span><i class="mo-sample mo-dash"></i>Interest portion</span><span>Between the lines: principal</span></div>
+  <div class="mo-controls">
+    <div><label for="mo-time">Explore a payment<output id="mo-date"></output></label><input id="mo-time" type="range" min="0" max="359" step="1" value="0" aria-label="Months after today"></div>
+    <div><label for="mo-rate">New mortgage rate<output id="mo-rate-label"></output></label><input id="mo-rate" type="range" min="0" max="12" step="0.05" value="7" aria-label="New mortgage annual interest rate"></div>
+  </div>
+  <div class="mo-details">
+    <div><div class="mo-detail-head">Current mortgage<span id="mo-status-a"></span></div><div class="mo-bar-track"><div class="mo-bar" id="mo-bar-a"><div class="mo-principal"></div><div class="mo-interest"></div></div></div><div class="mo-line">Principal<b id="mo-principal-a"></b></div><div class="mo-line">Interest<b id="mo-interest-a"></b></div><div class="mo-line">Balance after payment<b id="mo-balance-a"></b></div></div>
+    <div class="mo-new"><div class="mo-detail-head">New mortgage<span id="mo-status-b"></span></div><div class="mo-bar-track"><div class="mo-bar" id="mo-bar-b"><div class="mo-principal"></div><div class="mo-interest"></div></div></div><div class="mo-line">Principal<b id="mo-principal-b"></b></div><div class="mo-line">Interest<b id="mo-interest-b"></b></div><div class="mo-line">Balance after payment<b id="mo-balance-b"></b></div></div>
+  </div>
+  <div class="mo-foot">Illustrative example · Scheduled payments only · Principal and interest only · Payment 1 = the next payment on each loan</div>
+  <div id="mo-announcement" aria-live="polite" style="position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%)"></div>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/d3@7.9.0/dist/d3.min.js"></script>
+<script>
+(() => {
+  const root=document.getElementById('mortgage-orbit');
+  const el=id=>root.querySelector('#'+id);
+  const svg=d3.select(root.querySelector('.mo-chart'));
+  const money=v=>new Intl.NumberFormat('en-US',{style:'currency',currency:'USD',maximumFractionDigits:0}).format(v);
+  const state={rate:7,month:0};
+  const design={glow:0.6,comparison:'#bdb4f4'};
+  let x,y,geometryWidth=0,oldMax=0;
+  const H=265,top=18,bottom=226,left=58;
+  function schedule(p,rate,n){
+    const r=rate/1200,pay=r===0?p/n:p*r/(-Math.expm1(-n*Math.log1p(r)));
+    let balance=p;const rows=[];
+    for(let i=0;i<n;i++){const interest=balance*r,principal=Math.min(balance,pay-interest);balance=Math.max(0,balance-principal);rows.push({interest,principal,total:interest+principal,balance});}
+    return rows;
+  }
+  const paid={interest:0,principal:0,total:0,balance:0};
+  const current=schedule(400000,2,360).slice(60);
+  let next=[];
+  function restore(saved){const s=saved?.modelContent;if(s&&Number.isFinite(s.rate)&&Number.isFinite(s.month)){state.rate=Math.min(12,Math.max(0,s.rate));state.month=Math.min(359,Math.max(0,Math.round(s.month)));}}
+  restore(window.openai?.widgetState);
+  function persist(){window.openai?.setWidgetState?.({modelContent:{rate:state.rate,month:state.month,scenario:'Illustrative $400k at 2%, 60 payments made, versus a new $480k loan'},privateContent:null})?.catch(()=>{});}
+  function row(rows,m){return rows[m]||paid;}
+  function dateLabel(m){return m===0?'Next payment':Math.floor(m/12)+'y '+(m%12)+'m from now';}
+  function pathPoints(rows,key){const pts=Array.from({length:360},(_,i)=>({x:i,value:row(rows,i)[key]}));pts.push({x:360,value:0});return pts;}
+  const defs=svg.append('defs');
+  defs.append('filter').attr('id','mo-glow').attr('x','-50%').attr('width','200%').attr('y','-50%').attr('height','200%').append('feGaussianBlur').attr('stdDeviation',4);
+  ['a','b'].forEach((k,i)=>{const gradient=defs.append('linearGradient').attr('id','mo-fill-'+k).attr('x1','0').attr('x2','0').attr('y1','0').attr('y2','1');gradient.append('stop').attr('offset','0%').attr('stop-color',i?design.comparison:'#efdfb5').attr('stop-opacity',.2);gradient.append('stop').attr('offset','100%').attr('stop-color',i?design.comparison:'#efdfb5').attr('stop-opacity',.025);});
+  const grid=svg.append('g'),marks=svg.append('g'),guide=svg.append('g'),labels=svg.append('g');
+  ['b','a'].forEach(k=>{const g=marks.append('g').attr('data-series',k);g.append('path').attr('class','mo-area').attr('fill','url(#mo-fill-'+k+')');g.append('path').attr('class','mo-halo').attr('fill','none').attr('filter','url(#mo-glow)').attr('stroke-width',5);g.append('path').attr('class','mo-total').attr('fill','none').attr('stroke-width',1.7);g.append('path').attr('class','mo-interest-line').attr('fill','none').attr('stroke-width',1.4).attr('stroke-dasharray','4 4');});
+  guide.append('line').attr('stroke','#eff0e055').attr('stroke-width',1);
+  for(const k of ['a','b'])for(const type of ['total','interest'])guide.append('circle').attr('class','mo-marker-'+k+'-'+type).attr('r',type==='total'?4:3);
+  const hit=svg.append('rect').attr('fill','transparent').attr('aria-hidden','true');
+  function draw(animate=false){
+    const w=root.querySelector('.mo-chart').getBoundingClientRect().width;if(!w)return;
+    svg.attr('viewBox',`0 0 ${w} ${H}`);
+    x=d3.scaleLinear().domain([0,360]).range([left,w-12]);
+    const ymax=Math.ceil(Math.max(current[0].total,next[0].total)*1.13/500)*500;
+    y=d3.scaleLinear().domain([0,ymax]).range([bottom,top]);
+    const duration=animate&&!matchMedia('(prefers-reduced-motion: reduce)').matches?220:0;
+    grid.selectAll('*').remove();labels.selectAll('*').remove();
+    y.ticks(4).forEach(v=>{grid.append('line').attr('x1',left).attr('x2',w-12).attr('y1',y(v)).attr('y2',y(v)).attr('stroke','#c5cee012');labels.append('text').attr('x',left-10).attr('y',y(v)+4).attr('text-anchor','end').text(v?'$'+(v/1000).toFixed(v%1000?1:0)+'k':'$0');});
+    (w<430?[0,120,240,360]:[0,60,120,180,240,300,360]).forEach(m=>labels.append('text').attr('x',x(m)).attr('y',bottom+23).attr('text-anchor',m===0?'start':m===360?'end':'middle').text(m===0?'Now':m/12+'y'));
+    const line=d3.line().x(d=>x(d.x)).y(d=>y(d.value));
+    const area=d3.area().x(d=>x(d.x)).y0(bottom).y1(d=>y(d.value));
+    for(const [k,rows,color]of [['a',current,'#efdfb5'],['b',next,design.comparison]]){
+      const g=marks.select('[data-series="'+k+'"]');
+      const total=line(pathPoints(rows,'total')),interest=line(pathPoints(rows,'interest'));
+      const principal=d3.area().x(d=>x(d.x)).y0(d=>y(d.interest)).y1(d=>y(d.total))(Array.from({length:361},(_,i)=>({x:i,...row(rows,i)})));
+      g.select('.mo-area').interrupt().transition().duration(duration).attr('d',principal);
+      g.select('.mo-halo').attr('stroke',color).attr('opacity',design.glow).interrupt().transition().duration(duration).attr('d',interest);
+      g.select('.mo-total').attr('stroke',color).attr('opacity',.85).interrupt().transition().duration(duration).attr('d',total);
+      g.select('.mo-interest-line').attr('stroke',color).interrupt().transition().duration(duration).attr('d',interest);
+    }
+    defs.select('#mo-fill-b').selectAll('stop').attr('stop-color',design.comparison);
+    hit.attr('x',left).attr('y',top).attr('width',w-left-12).attr('height',bottom-top);
+    geometryWidth=w;oldMax=ymax;detail();
+  }
+  function detail(){
+    const a=row(current,state.month),b=row(next,state.month),diff=b.total-a.total;
+    el('mo-pay-a').textContent=money(a.total);el('mo-pay-b').textContent=money(b.total);
+    el('mo-gap').textContent=money(Math.abs(diff))+(diff>=0?' more':' less')+' / month';
+    el('mo-date').textContent=dateLabel(state.month);el('mo-rate-label').textContent=state.rate.toFixed(2)+'%';
+    el('mo-time').value=state.month;el('mo-rate').value=state.rate;
+    const max=Math.max(current[0].total,next[0].total);
+    for(const [k,loan,color]of [['a',a,'#efdfb5'],['b',b,design.comparison]]){
+      for(const key of ['principal','interest','balance'])el('mo-'+key+'-'+k).textContent=money(loan[key]);
+      el('mo-status-'+k).textContent=loan.total===0?'Paid off':'Payment '+(state.month+(k==='a'?61:1));
+      const bar=el('mo-bar-'+k);bar.style.width=(loan.total/max*100)+'%';
+      bar.querySelector('.mo-principal').style.width=(loan.total?loan.principal/loan.total*100:0)+'%';
+      bar.querySelector('.mo-interest').style.width=(loan.total?loan.interest/loan.total*100:0)+'%';
+      for(const type of ['total','interest'])guide.select('.mo-marker-'+k+'-'+type).attr('cx',x(state.month)).attr('cy',y(loan[type])).attr('fill',color).attr('stroke','#0d1526').attr('stroke-width',2);
+    }
+    guide.select('line').attr('x1',x(state.month)).attr('x2',x(state.month)).attr('y1',top).attr('y2',bottom);
+  }
+  function refresh(animate=false){next=schedule(480000,state.rate,360);root.style.setProperty('--mo-lilac',design.comparison);draw(animate);}
+  function announce(){el('mo-announcement').textContent=dateLabel(state.month)+'. Current payment '+el('mo-pay-a').textContent+'. New payment '+el('mo-pay-b').textContent+'. '+el('mo-gap').textContent;persist();}
+  el('mo-time').addEventListener('input',e=>{state.month=Number(e.target.value);detail();});
+  el('mo-rate').addEventListener('input',e=>{state.rate=Number(e.target.value);refresh(true);});
+  el('mo-time').addEventListener('change',announce);el('mo-rate').addEventListener('change',announce);
+  hit.on('pointermove',e=>{if(e.pointerType!=='mouse'&&!e.buttons)return;state.month=Math.max(0,Math.min(359,Math.round(x.invert(d3.pointer(e,svg.node())[0]))));detail();}).on('click',e=>{state.month=Math.max(0,Math.min(359,Math.round(x.invert(d3.pointer(e,svg.node())[0]))));detail();announce();});
+  window.addEventListener('openai:set_globals',e=>{if(e.detail?.globals?.widgetState){restore(e.detail.globals.widgetState);refresh();}});
+  refresh();new ResizeObserver(()=>draw()).observe(root.querySelector('.mo-chart'));
+  if(globalThis.Tweak){const tweak=new Tweak({container:root,onChange:()=>refresh()});tweak.addSlider(design,'glow',{label:'Curve glow',min:0,max:1,step:.1});tweak.addColorPicker(design,'comparison',{label:'Comparison color'});}
+})();
+</script>
