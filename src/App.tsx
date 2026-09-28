@@ -502,7 +502,7 @@ export default function App() {
       <main>
         <div className="page-heading">
           <h1>amortization.lol</h1>
-          <p>Mortgage comparison tool.</p>
+          <p>(So your spouse can stop sending you houses)</p>
         </div>
         {sharedAsOf && (
           <p className="shared-notice">
@@ -516,167 +516,160 @@ export default function App() {
             sharing again.
           </p>
         )}
-        <div className="mode-switch" aria-label="Comparison mode">
-          <button
-            aria-pressed={mode === "rate"}
-            onClick={() => changeMode("rate")}
-          >
-            Compare rates
-          </button>
-          <button
-            aria-pressed={mode === "purchase"}
-            onClick={() => changeMode("purchase")}
-          >
-            Buy today
-          </button>
-          <div className="header-actions">
-            <button className="text-button" onClick={reset}>
-              <RotateCcw size={14} />
-              Reset
-            </button>
-            <button className="text-button" onClick={() => setHelpOpen(true)}>
-              Assumptions
-              <ArrowRight size={14} />
-            </button>
-          </div>
-        </div>
-        <div className="workspace">
-          <aside className="inputs-panel" aria-label="Mortgage inputs">
-            <section className="input-section">
-              <h2>Current loan</h2>
-              <Field {...f("amount")} label="Original amount" prefix="$" />
-              <div className="field-pair">
-                <Field {...f("rate")} label="Interest rate" suffix="%" />
-                <Field {...f("years")} label="Term" suffix="years" />
-              </div>
-              <Field {...f("start")} label="First payment" type="month" />
-            </section>
-            <section className="input-section comparison-fields">
-              <h2>{mode === "rate" ? "Alternative loan" : "New home"}</h2>
-              {mode === "purchase" && (
-                <>
-                  <Field {...f("price")} label="Purchase price" prefix="$" />
-                  <Field
-                    {...f("downPayment")}
-                    label="Down payment"
-                    prefix="$"
-                    hint={
-                      Number.isFinite(inputs.downPayment / inputs.price)
-                        ? `${((inputs.downPayment / inputs.price) * 100).toFixed(0)}%`
-                        : undefined
-                    }
-                  />
-                  <div className="new-loan-note">
-                    Loan amount
-                    <strong>
-                      {Number.isFinite(inputs.price - inputs.downPayment) &&
-                      inputs.price > inputs.downPayment
-                        ? money(inputs.price - inputs.downPayment)
-                        : "—"}
-                    </strong>
-                  </div>
-                </>
-              )}
-              <Field
-                {...f("comparisonRate")}
-                label="Interest rate"
-                suffix="%"
-              />
-              <div className="rate-slider">
-                <input
-                  aria-label="Comparison interest rate"
-                  type="range"
-                  min="0"
-                  max={rateMax}
-                  step="0.05"
-                  value={
-                    Number.isFinite(inputs.comparisonRate)
-                      ? Math.min(rateMax, Math.max(0, inputs.comparisonRate))
-                      : 0
-                  }
-                  onChange={(e) =>
-                    setDraft((d) => ({ ...d, comparisonRate: e.target.value }))
-                  }
-                  style={
-                    {
-                      "--fill": `${(Number.isFinite(inputs.comparisonRate) ? inputs.comparisonRate / rateMax : 0) * 100}%`,
-                    } as React.CSSProperties
-                  }
-                />
-                <div className="range-labels">
-                  <span>0%</span>
-                  <span>{rateMax}%</span>
-                </div>
-              </div>
-              <Field
-                {...f(mode === "rate" ? "comparisonYears" : "newYears")}
-                label="Term"
-                suffix="years"
-                placeholder={mode === "rate" ? draft.years : undefined}
-                hint={
-                  mode === "rate" && !draft.comparisonYears.trim()
-                    ? "Same as current"
-                    : undefined
-                }
-              />
-            </section>
-            <section
-              className="housing-controls"
-              aria-label="Additional housing costs"
+        <div className="content-card">
+          <div className="mode-switch" aria-label="Comparison mode">
+            <button
+              aria-pressed={mode === "rate"}
+              onClick={() => changeMode("rate")}
             >
-              <label className="housing-toggle">
-                <input
-                  type="checkbox"
-                  checked={includeHousingCosts}
-                  onChange={(e) => setIncludeHousingCosts(e.target.checked)}
-                  aria-describedby={
-                    includeHousingCosts ? "housing-assumptions" : undefined
-                  }
-                />
-                <span>Include taxes &amp; insurance</span>
-              </label>
-              {includeHousingCosts && (
-                <>
-                  <p id="housing-assumptions" className="input-note">
-                    {(HOUSING_ASSUMPTIONS.propertyTaxRate * 100).toFixed(1)}%
-                    annual tax ·{" "}
-                    {money(HOUSING_ASSUMPTIONS.annualInsurance / 12)}/mo
-                    insurance default
-                  </p>
-                  <div className="housing-value">
+              Compare rates
+            </button>
+            <button
+              aria-pressed={mode === "purchase"}
+              onClick={() => changeMode("purchase")}
+            >
+              Buy today
+            </button>
+            <div className="header-actions">
+              <button className="text-button" onClick={reset}>
+                <RotateCcw size={14} />
+                Reset
+              </button>
+              <button className="text-button" onClick={() => setHelpOpen(true)}>
+                Assumptions
+                <ArrowRight size={14} />
+              </button>
+            </div>
+          </div>
+          <div className="workspace">
+            <aside className="inputs-panel" aria-label="Mortgage inputs">
+              <section className="input-section">
+                <h2>Current loan</h2>
+                <Field {...f("amount")} label="Original amount" prefix="$" />
+                <div className="field-pair">
+                  <Field {...f("rate")} label="Interest rate" suffix="%" />
+                  <Field {...f("years")} label="Term" suffix="years" />
+                </div>
+                <Field {...f("start")} label="First payment" type="month" />
+              </section>
+              <section className="input-section comparison-fields">
+                <h2>{mode === "rate" ? "Alternative loan" : "New home"}</h2>
+                {mode === "purchase" && (
+                  <>
+                    <Field {...f("price")} label="Purchase price" prefix="$" />
                     <Field
-                      {...f("homeValue")}
-                      label="Current home value"
+                      {...f("downPayment")}
+                      label="Down payment"
                       prefix="$"
-                      hint="Optional"
-                      placeholder={
-                        Number.isFinite(inputs.amount)
-                          ? (
-                              inputs.amount /
-                              HOUSING_ASSUMPTIONS.assumedLoanToValue
-                            ).toLocaleString("en-US", {
-                              maximumFractionDigits: 0,
-                            })
-                          : "Auto estimate"
+                      hint={
+                        Number.isFinite(inputs.downPayment / inputs.price)
+                          ? `${((inputs.downPayment / inputs.price) * 100).toFixed(0)}%`
+                          : undefined
                       }
                     />
-                    <p className="input-note">
-                      Auto estimate assumes 20% down.
+                    <div className="new-loan-note">
+                      Loan amount
+                      <strong>
+                        {Number.isFinite(inputs.price - inputs.downPayment) &&
+                        inputs.price > inputs.downPayment
+                          ? money(inputs.price - inputs.downPayment)
+                          : "—"}
+                      </strong>
+                    </div>
+                  </>
+                )}
+                <Field
+                  {...f("comparisonRate")}
+                  label="Interest rate"
+                  suffix="%"
+                />
+                <div className="rate-slider">
+                  <input
+                    aria-label="Comparison interest rate"
+                    type="range"
+                    min="0"
+                    max={rateMax}
+                    step="0.05"
+                    value={
+                      Number.isFinite(inputs.comparisonRate)
+                        ? Math.min(rateMax, Math.max(0, inputs.comparisonRate))
+                        : 0
+                    }
+                    onChange={(e) =>
+                      setDraft((d) => ({
+                        ...d,
+                        comparisonRate: e.target.value,
+                      }))
+                    }
+                    style={
+                      {
+                        "--fill": `${(Number.isFinite(inputs.comparisonRate) ? inputs.comparisonRate / rateMax : 0) * 100}%`,
+                      } as React.CSSProperties
+                    }
+                  />
+                  <div className="range-labels">
+                    <span>0%</span>
+                    <span>{rateMax}%</span>
+                  </div>
+                </div>
+                <Field
+                  {...f(mode === "rate" ? "comparisonYears" : "newYears")}
+                  label="Term"
+                  suffix="years"
+                  placeholder={mode === "rate" ? draft.years : undefined}
+                  hint={
+                    mode === "rate" && !draft.comparisonYears.trim()
+                      ? "Same as current"
+                      : undefined
+                  }
+                />
+              </section>
+              <section
+                className="housing-controls"
+                aria-label="Additional housing costs"
+              >
+                <label className="housing-toggle">
+                  <input
+                    type="checkbox"
+                    checked={includeHousingCosts}
+                    onChange={(e) => setIncludeHousingCosts(e.target.checked)}
+                    aria-describedby={
+                      includeHousingCosts ? "housing-assumptions" : undefined
+                    }
+                  />
+                  <span>Include taxes &amp; insurance</span>
+                </label>
+                {includeHousingCosts && (
+                  <>
+                    <p id="housing-assumptions" className="input-note">
+                      {(HOUSING_ASSUMPTIONS.propertyTaxRate * 100).toFixed(1)}%
+                      annual tax ·{" "}
+                      {money(HOUSING_ASSUMPTIONS.annualInsurance / 12)}/mo
+                      insurance default
                     </p>
-                    <Field
-                      {...f("annualInsurance")}
-                      label="Current insurance"
-                      prefix="$"
-                      suffix="/ year"
-                      hint="Optional"
-                      placeholder={HOUSING_ASSUMPTIONS.annualInsurance.toLocaleString(
-                        "en-US",
-                      )}
-                    />
-                    {mode === "purchase" && (
+                    <div className="housing-value">
                       <Field
-                        {...f("newAnnualInsurance")}
-                        label="New home insurance"
+                        {...f("homeValue")}
+                        label="Current home value"
+                        prefix="$"
+                        hint="Optional"
+                        placeholder={
+                          Number.isFinite(inputs.amount)
+                            ? (
+                                inputs.amount /
+                                HOUSING_ASSUMPTIONS.assumedLoanToValue
+                              ).toLocaleString("en-US", {
+                                maximumFractionDigits: 0,
+                              })
+                            : "Auto estimate"
+                        }
+                      />
+                      <p className="input-note">
+                        Auto estimate assumes 20% down.
+                      </p>
+                      <Field
+                        {...f("annualInsurance")}
+                        label="Current insurance"
                         prefix="$"
                         suffix="/ year"
                         hint="Optional"
@@ -684,287 +677,307 @@ export default function App() {
                           "en-US",
                         )}
                       />
-                    )}
-                  </div>
-                </>
-              )}
-            </section>
-            <label className="remember">
-              <input
-                type="checkbox"
-                checked={remember}
-                onChange={(e) => {
-                  storageTouched.current = true;
-                  setRemember(e.target.checked);
-                }}
-              />
-              <span>Save on this device</span>
-            </label>
-            {saveError && (
-              <p className="field-message">Couldn’t save your inputs.</p>
-            )}
-          </aside>
-          <div className="results-panel">
-            {!data ? (
-              <div className="empty-state" role="status">
-                <h2>Check your inputs.</h2>
-                <p>Correct the highlighted fields.</p>
-              </div>
-            ) : (
-              <>
-                <section
-                  className="comparison-figure"
-                  aria-label="Mortgage visualization"
-                >
-                  <div className="result-headline">
-                    <div className="result-headline-top">
-                      <span className="figure-label">
-                        Starting monthly difference
-                      </span>
-                      <button
-                        className="primary-button share-button"
-                        onClick={openSharing}
-                      >
-                        <Share2 size={15} />
-                        Share with spouse
-                      </button>
-                    </div>
-                    <h2>
-                      {Math.abs(initialDifference) < 0.005 ? (
-                        <>Same payment</>
-                      ) : (
-                        <>
-                          <span>{money(Math.abs(initialDifference))}</span>{" "}
-                          <em>{differenceWord}</em>
-                          <span className="per-month"> / mo</span>
-                        </>
+                      {mode === "purchase" && (
+                        <Field
+                          {...f("newAnnualInsurance")}
+                          label="New home insurance"
+                          prefix="$"
+                          suffix="/ year"
+                          hint="Optional"
+                          placeholder={HOUSING_ASSUMPTIONS.annualInsurance.toLocaleString(
+                            "en-US",
+                          )}
+                        />
                       )}
-                    </h2>
-                  </div>
-                  <div className="chart-section">
-                    <div className="chart-toolbar">
-                      <div className="chart-tabs" aria-label="Graph view">
-                        <button
-                          aria-pressed={view === "balance"}
-                          onClick={() => setView("balance")}
-                        >
-                          Balance
-                        </button>
-                        <button
-                          aria-pressed={view === "payment"}
-                          onClick={() => setView("payment")}
-                        >
-                          Payments
-                        </button>
-                        <button
-                          aria-pressed={view === "interest"}
-                          onClick={() => setView("interest")}
-                        >
-                          Interest
-                        </button>
-                      </div>
-                      <span className="chart-unit">USD</span>
                     </div>
-                    <div className="chart-legend">
-                      <span>
-                        <i className="legend-line current-line" />
-                        Current · {inputs.rate}% · {inputs.years}y
-                      </span>
-                      <span>
-                        <i className="legend-line alternate-line" />
-                        {alternateTitle} · {inputs.comparisonRate}% ·{" "}
-                        {mode === "rate"
-                          ? (inputs.comparisonYears ?? inputs.years)
-                          : inputs.newYears}
-                        y
-                      </span>
-                    </div>
-                    <p className="chart-cost-note">
-                      {view === "balance"
-                        ? "Shaded gap: remaining balance difference"
-                        : view === "interest"
-                          ? "Shaded gap: monthly interest difference"
-                          : `Lower curves: interest${includeHousingCosts ? " + taxes & insurance" : ""} · Bands: principal`}
-                    </p>
-                    <MortgageChart
-                      data={data}
-                      view={view}
-                      selected={month}
-                      onSelect={setSelected}
-                      today={monthIndex(today)}
-                      mode={mode}
-                    />
-                    <div className="timeline">
-                      <div className="timeline-head">
-                        <div className="selected-date">
-                          <strong>
-                            {formatMonth(data.start + month, true)}
-                          </strong>
-                          <span>
-                            {mode === "rate"
-                              ? `Year ${Math.floor(month / 12) + 1}`
-                              : month === 0
-                                ? timeLabel
-                                : `+${Math.floor(month / 12)}y ${month % 12}m`}
-                          </span>
-                        </div>
-                        <div className="timeline-actions">
-                          <button
-                            onClick={() =>
-                              setSelected(
-                                mode === "rate"
-                                  ? Math.min(data.elapsed, data.horizon - 1)
-                                  : 0,
-                              )
-                            }
-                            className="today-button"
-                          >
-                            {timeLabel}
-                          </button>
-                          <button
-                            className="icon-button"
-                            aria-label="Previous month"
-                            disabled={month === 0}
-                            onClick={() => setSelected(month - 1)}
-                          >
-                            <ChevronLeft size={18} />
-                          </button>
-                          <button
-                            className="icon-button"
-                            aria-label="Next month"
-                            disabled={month >= data.horizon - 1}
-                            onClick={() => setSelected(month + 1)}
-                          >
-                            <ChevronRight size={18} />
-                          </button>
-                        </div>
-                      </div>
-                      <input
-                        className="time-range"
-                        aria-label="Explore monthly payments"
-                        aria-valuetext={formatMonth(data.start + month)}
-                        type="range"
-                        min="0"
-                        max={data.horizon - 1}
-                        step="1"
-                        value={month}
-                        onChange={(e) => setSelected(Number(e.target.value))}
-                        style={
-                          {
-                            "--fill": `${(month / Math.max(data.horizon - 1, 1)) * 100}%`,
-                          } as React.CSSProperties
-                        }
-                      />
-                    </div>
-                  </div>
-                </section>
-                <section
-                  className="breakdown"
-                  aria-labelledby="breakdown-title"
-                >
-                  <div className="breakdown-header">
-                    <h2 id="breakdown-title">Monthly breakdown</h2>
-                    <span>{formatMonth(data.start + month, true)}</span>
-                  </div>
-                  {includeHousingCosts && (
-                    <p className="breakdown-note">
-                      Includes estimated taxes &amp; insurance.
-                    </p>
-                  )}
-                  <div className="payment-cards">
-                    <PaymentCard
-                      kind="current"
-                      title="Current"
-                      rate={inputs.rate}
-                      payment={current}
-                      maxPayment={Math.max(current.total, alternate.total)}
-                      index={month}
-                      includeHousingCosts={includeHousingCosts}
-                      totalCount={data.original.length}
-                    />
-                    <PaymentCard
-                      kind="alternate"
-                      title={alternateTitle}
-                      rate={inputs.comparisonRate}
-                      payment={alternate}
-                      maxPayment={Math.max(current.total, alternate.total)}
-                      index={month}
-                      includeHousingCosts={includeHousingCosts}
-                      totalCount={data.alternate.length}
-                    />
-                  </div>
-                  <div className="month-difference">
-                    <span>Difference this month</span>
-                    <strong>
-                      {Math.abs(monthDifference) < 0.005
-                        ? "$0"
-                        : `${money(Math.abs(monthDifference))} ${monthDifference > 0 ? "more" : "less"}`}
-                    </strong>
-                  </div>
-                </section>
-              </>
-            )}
-          </div>
-        </div>
-        {data && (
-          <section className="big-picture" aria-labelledby="totals-title">
-            <div className="big-picture-heading">
-              <h2 id="totals-title">Loan totals</h2>
-              <span>
-                {mode === "rate"
-                  ? "Full loan term"
-                  : sharedAsOf
-                    ? `From ${formatMonth(monthIndex(sharedAsOf), true)}`
-                    : "From today"}
-              </span>
-            </div>
-            <div className="interest-summary">
-              <h3>Total interest</h3>
-              <div>
-                <span>Current</span>
-                <strong>{money(data.currentInterest)}</strong>
-              </div>
-              <div>
-                <span>{alternateTitle}</span>
-                <strong>{money(data.alternateInterest)}</strong>
-              </div>
-              <p>
-                {Math.abs(interestDifference) < 0.005 ? (
-                  "$0 difference"
-                ) : (
-                  <>
-                    <strong>{money(Math.abs(interestDifference))}</strong>{" "}
-                    {interestDifference > 0 ? "more" : "less"}
                   </>
                 )}
-              </p>
+              </section>
+              <label className="remember">
+                <input
+                  type="checkbox"
+                  checked={remember}
+                  onChange={(e) => {
+                    storageTouched.current = true;
+                    setRemember(e.target.checked);
+                  }}
+                />
+                <span>Save on this device</span>
+              </label>
+              {saveError && (
+                <p className="field-message">Couldn’t save your inputs.</p>
+              )}
+            </aside>
+            <div className="results-panel">
+              {!data ? (
+                <div className="empty-state" role="status">
+                  <h2>Check your inputs.</h2>
+                  <p>Correct the highlighted fields.</p>
+                </div>
+              ) : (
+                <>
+                  <section
+                    className="comparison-figure"
+                    aria-label="Mortgage visualization"
+                  >
+                    <div className="result-headline">
+                      <div className="result-headline-top">
+                        <span className="figure-label">
+                          Starting monthly difference
+                        </span>
+                        <button
+                          className="primary-button share-button"
+                          onClick={openSharing}
+                        >
+                          <Share2 size={15} />
+                          Share with spouse
+                        </button>
+                      </div>
+                      <h2>
+                        {Math.abs(initialDifference) < 0.005 ? (
+                          <>Same payment</>
+                        ) : (
+                          <>
+                            <span>{money(Math.abs(initialDifference))}</span>{" "}
+                            <em>{differenceWord}</em>
+                            <span className="per-month"> / mo</span>
+                          </>
+                        )}
+                      </h2>
+                    </div>
+                    <div className="chart-section">
+                      <div className="chart-toolbar">
+                        <div className="chart-tabs" aria-label="Graph view">
+                          <button
+                            aria-pressed={view === "balance"}
+                            onClick={() => setView("balance")}
+                          >
+                            Balance
+                          </button>
+                          <button
+                            aria-pressed={view === "payment"}
+                            onClick={() => setView("payment")}
+                          >
+                            Payments
+                          </button>
+                          <button
+                            aria-pressed={view === "interest"}
+                            onClick={() => setView("interest")}
+                          >
+                            Interest
+                          </button>
+                        </div>
+                        <span className="chart-unit">USD</span>
+                      </div>
+                      <div className="chart-legend">
+                        <span>
+                          <i className="legend-line current-line" />
+                          Current · {inputs.rate}% · {inputs.years}y
+                        </span>
+                        <span>
+                          <i className="legend-line alternate-line" />
+                          {alternateTitle} · {inputs.comparisonRate}% ·{" "}
+                          {mode === "rate"
+                            ? (inputs.comparisonYears ?? inputs.years)
+                            : inputs.newYears}
+                          y
+                        </span>
+                      </div>
+                      <p className="chart-cost-note">
+                        {view === "balance"
+                          ? "Shaded gap: remaining balance difference"
+                          : view === "interest"
+                            ? "Shaded gap: monthly interest difference"
+                            : `Lower curves: interest${includeHousingCosts ? " + taxes & insurance" : ""} · Bands: principal`}
+                      </p>
+                      <MortgageChart
+                        data={data}
+                        view={view}
+                        selected={month}
+                        onSelect={setSelected}
+                        today={monthIndex(today)}
+                        mode={mode}
+                      />
+                      <div className="timeline">
+                        <div className="timeline-head">
+                          <div className="selected-date">
+                            <strong>
+                              {formatMonth(data.start + month, true)}
+                            </strong>
+                            <span>
+                              {mode === "rate"
+                                ? `Year ${Math.floor(month / 12) + 1}`
+                                : month === 0
+                                  ? timeLabel
+                                  : `+${Math.floor(month / 12)}y ${month % 12}m`}
+                            </span>
+                          </div>
+                          <div className="timeline-actions">
+                            <button
+                              onClick={() =>
+                                setSelected(
+                                  mode === "rate"
+                                    ? Math.min(data.elapsed, data.horizon - 1)
+                                    : 0,
+                                )
+                              }
+                              className="today-button"
+                            >
+                              {timeLabel}
+                            </button>
+                            <button
+                              className="icon-button"
+                              aria-label="Previous month"
+                              disabled={month === 0}
+                              onClick={() => setSelected(month - 1)}
+                            >
+                              <ChevronLeft size={18} />
+                            </button>
+                            <button
+                              className="icon-button"
+                              aria-label="Next month"
+                              disabled={month >= data.horizon - 1}
+                              onClick={() => setSelected(month + 1)}
+                            >
+                              <ChevronRight size={18} />
+                            </button>
+                          </div>
+                        </div>
+                        <input
+                          className="time-range"
+                          aria-label="Explore monthly payments"
+                          aria-valuetext={formatMonth(data.start + month)}
+                          type="range"
+                          min="0"
+                          max={data.horizon - 1}
+                          step="1"
+                          value={month}
+                          onChange={(e) => setSelected(Number(e.target.value))}
+                          style={
+                            {
+                              "--fill": `${(month / Math.max(data.horizon - 1, 1)) * 100}%`,
+                            } as React.CSSProperties
+                          }
+                        />
+                      </div>
+                    </div>
+                  </section>
+                  <section
+                    className="breakdown"
+                    aria-labelledby="breakdown-title"
+                  >
+                    <div className="breakdown-header">
+                      <h2 id="breakdown-title">Monthly breakdown</h2>
+                      <span>{formatMonth(data.start + month, true)}</span>
+                    </div>
+                    {includeHousingCosts && (
+                      <p className="breakdown-note">
+                        Includes estimated taxes &amp; insurance.
+                      </p>
+                    )}
+                    <div className="payment-cards">
+                      <PaymentCard
+                        kind="current"
+                        title="Current"
+                        rate={inputs.rate}
+                        payment={current}
+                        maxPayment={Math.max(current.total, alternate.total)}
+                        index={month}
+                        includeHousingCosts={includeHousingCosts}
+                        totalCount={data.original.length}
+                      />
+                      <PaymentCard
+                        kind="alternate"
+                        title={alternateTitle}
+                        rate={inputs.comparisonRate}
+                        payment={alternate}
+                        maxPayment={Math.max(current.total, alternate.total)}
+                        index={month}
+                        includeHousingCosts={includeHousingCosts}
+                        totalCount={data.alternate.length}
+                      />
+                      <div
+                        className={`payment-difference ${Math.abs(monthDifference) < 0.005 ? "same-cost" : monthDifference > 0 ? "alternate-costs-more" : "current-costs-more"}`}
+                        role="status"
+                        aria-label={
+                          Math.abs(monthDifference) < 0.005
+                            ? "The monthly payments are the same."
+                            : `${monthDifference > 0 ? alternateTitle : "Current loan"} costs more this month.`
+                        }
+                      >
+                        <span>Difference</span>
+                        <strong>
+                          {Math.abs(monthDifference) < 0.005
+                            ? "$0"
+                            : `${money(Math.abs(monthDifference))} ${monthDifference > 0 ? "more" : "less"}`}
+                        </strong>
+                      </div>
+                    </div>
+                  </section>
+                </>
+              )}
             </div>
-            <div className="payoff-summary">
-              <h3>Paid off by</h3>
-              <div>
-                <span>Current</span>
-                <strong>
-                  {data.current.length
-                    ? formatMonth(data.start + data.current.length - 1, true)
-                    : "Paid off"}
-                </strong>
+          </div>
+          {data && (
+            <section className="big-picture" aria-labelledby="totals-title">
+              <div className="big-picture-heading">
+                <h2 id="totals-title">Loan totals</h2>
+                <span>
+                  {mode === "rate"
+                    ? "Full loan term"
+                    : sharedAsOf
+                      ? `From ${formatMonth(monthIndex(sharedAsOf), true)}`
+                      : "From today"}
+                </span>
               </div>
-              <div>
-                <span>{alternateTitle}</span>
-                <strong>
-                  {formatMonth(data.start + data.alternate.length - 1, true)}
-                </strong>
+              <div className="interest-summary">
+                <h3>Total interest</h3>
+                <div>
+                  <span>Current</span>
+                  <strong>{money(data.currentInterest)}</strong>
+                </div>
+                <div>
+                  <span>{alternateTitle}</span>
+                  <strong>{money(data.alternateInterest)}</strong>
+                </div>
+                <p>
+                  {Math.abs(interestDifference) < 0.005 ? (
+                    "$0 difference"
+                  ) : (
+                    <>
+                      <strong>{money(Math.abs(interestDifference))}</strong>{" "}
+                      {interestDifference > 0 ? "more" : "less"}
+                    </>
+                  )}
+                </p>
               </div>
-              <button
-                className="text-button"
-                onClick={() => downloadComparison(data, mode)}
-              >
-                <Download size={14} />
-                Export CSV
-              </button>
-            </div>
-          </section>
-        )}
+              <div className="payoff-summary">
+                <h3>Paid off by</h3>
+                <div>
+                  <span>Current</span>
+                  <strong>
+                    {data.current.length
+                      ? formatMonth(data.start + data.current.length - 1, true)
+                      : "Paid off"}
+                  </strong>
+                </div>
+                <div>
+                  <span>{alternateTitle}</span>
+                  <strong>
+                    {formatMonth(data.start + data.alternate.length - 1, true)}
+                  </strong>
+                </div>
+                <button
+                  className="text-button"
+                  onClick={() => downloadComparison(data, mode)}
+                >
+                  <Download size={14} />
+                  Export CSV
+                </button>
+              </div>
+            </section>
+          )}
+        </div>
         <footer>
           <span>US fixed-rate mortgages</span>
           <span>Calculated in your browser</span>
