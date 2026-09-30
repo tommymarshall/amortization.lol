@@ -12,6 +12,7 @@ import {
 import MortgageChart from "./MortgageChart";
 import {
   compare,
+  compactMoney,
   currentMonth,
   formatMonth,
   HOUSING_ASSUMPTIONS,
@@ -41,6 +42,9 @@ import {
 } from "./sharing";
 
 const STORAGE = "parallel-mortgage-v1";
+const compactLoanAmount = (amount: number) =>
+  compactMoney(amount).replace(/[KMB]$/, (unit) => unit.toLowerCase());
+
 function load(): {
   draft: Draft;
   mode: Mode;
@@ -588,19 +592,10 @@ export default function App() {
                       prefix="$"
                       hint={
                         Number.isFinite(inputs.downPayment / inputs.price)
-                          ? `${((inputs.downPayment / inputs.price) * 100).toFixed(0)}%`
+                          ? `${((inputs.downPayment / inputs.price) * 100).toFixed(0)}% · ${inputs.price > inputs.downPayment ? `${compactLoanAmount(inputs.price - inputs.downPayment)} loan` : "—"}`
                           : undefined
                       }
                     />
-                    <div className="new-loan-note">
-                      Loan amount
-                      <strong>
-                        {Number.isFinite(inputs.price - inputs.downPayment) &&
-                        inputs.price > inputs.downPayment
-                          ? money(inputs.price - inputs.downPayment)
-                          : "—"}
-                      </strong>
-                    </div>
                   </>
                 )}
                 <RateField
