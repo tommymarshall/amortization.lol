@@ -1,0 +1,50 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 900" preserveAspectRatio="xMidYMid slice">
+  <defs>
+    <pattern id="g" width="48" height="48" patternUnits="userSpaceOnUse">
+      <path d="M48 0H0V48" fill="none" stroke="#6c5ce7" stroke-opacity=".06" stroke-width="1"/>
+    </pattern>
+    <linearGradient id="fa" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#6c5ce7" stop-opacity=".10"/>
+      <stop offset="1" stop-color="#6c5ce7" stop-opacity="0"/>
+    </linearGradient>
+    <linearGradient id="fb" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#f08a3c" stop-opacity=".12"/>
+      <stop offset="1" stop-color="#f08a3c" stop-opacity="0"/>
+    </linearGradient>
+  </defs>
+
+  <!-- grid -->
+  <rect width="1440" height="900" fill="url(#g)"/>
+
+  <!-- balance curves with shaded area -->
+  <path d="M0 180 C300 200 560 300 820 470 S1250 820 1440 860 V900 H0Z" fill="url(#fa)"/>
+  <path d="M0 180 C300 200 560 300 820 470 S1250 820 1440 860" fill="none" stroke="#6c5ce7" stroke-opacity=".22" stroke-width="3" stroke-linecap="round"/>
+  <path d="M0 300 C360 330 640 470 900 620 S1280 850 1440 880 V900 H0Z" fill="url(#fb)"/>
+  <path d="M0 300 C360 330 640 470 900 620 S1280 850 1440 880" fill="none" stroke="#f08a3c" stroke-opacity=".25" stroke-width="3" stroke-linecap="round" stroke-dasharray="2 10"/>
+
+  <!-- data points -->
+  <g fill="#6c5ce7" fill-opacity=".18">
+    <circle cx="240" cy="214" r="6"/><circle cx="520" cy="290" r="6"/>
+    <circle cx="820" cy="470" r="6"/><circle cx="1140" cy="700" r="6"/>
+  </g>
+  <g fill="#f08a3c" fill-opacity=".2">
+    <circle cx="300" cy="338" r="5"/><circle cx="640" cy="470" r="5"/><circle cx="1000" cy="690" r="5"/>
+  </g>
+
+  <!-- bar charts: bottom-left and top-right -->
+  <g fill="#6c5ce7" fill-opacity=".07">
+    <rect x="60" y="760" width="22" height="140" rx="8"/><rect x="96" y="720" width="22" height="180" rx="8"/>
+    <rect x="132" y="680" width="22" height="220" rx="8"/><rect x="168" y="620" width="22" height="280" rx="8"/>
+  </g>
+  <g fill="#f08a3c" fill-opacity=".09">
+    <rect x="1250" y="120" width="22" height="120" rx="8"/><rect x="1286" y="90" width="22" height="150" rx="8"/>
+    <rect x="1322" y="60" width="22" height="180" rx="8"/><rect x="1358" y="20" width="22" height="220" rx="8"/>
+  </g>
+
+  <!-- sparkline -->
+  <path d="M1180 330 l40 -30 l36 18 l44 -46 l40 12" fill="none" stroke="#6c5ce7" stroke-opacity=".2" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+
+  <!-- donut ring, top-left -->
+  <circle cx="120" cy="110" r="44" fill="none" stroke="#f08a3c" stroke-opacity=".18" stroke-width="10" stroke-dasharray="190 300"/>
+  <circle cx="120" cy="110" r="44" fill="none" stroke="#6c5ce7" stroke-opacity=".14" stroke-width="10" stroke-dasharray="86 300" stroke-dashoffset="-190"/>
+</svg>

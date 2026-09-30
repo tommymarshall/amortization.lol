@@ -156,6 +156,29 @@ function Field({
   );
 }
 
+function RateField({ max, ...props }: React.ComponentProps<typeof Field> & { max: number }) {
+  const numeric = Number(props.value.replaceAll(",", ""));
+  const value = Number.isFinite(numeric) ? Math.min(max, Math.max(0, numeric)) : 0;
+  return (
+    <div className="rate-field">
+      <Field {...props} />
+      <div className="rate-slider">
+        <input
+          aria-label={props.name === "rate" ? "Current interest rate" : "Comparison interest rate"}
+          type="range"
+          min="0"
+          max={max}
+          step="0.05"
+          value={value}
+          onChange={(e) => props.onChange(e.target.value)}
+          style={{ "--fill": `${value / max * 100}%` } as React.CSSProperties}
+        />
+        <div className="range-labels"><span>0%</span><span>{max}%</span></div>
+      </div>
+    </div>
+  );
+}
+
 function PaymentCard({
   kind,
   title,
@@ -502,7 +525,7 @@ export default function App() {
       <main>
         <div className="page-heading">
           <h1>amortization.lol</h1>
-          <p>(So your spouse can stop sending you houses)</p>
+          <p>This is why you'll never leave your house</p>
         </div>
         {sharedAsOf && (
           <p className="shared-notice">
@@ -517,19 +540,21 @@ export default function App() {
           </p>
         )}
         <div className="content-card">
-          <div className="mode-switch" aria-label="Comparison mode">
-            <button
-              aria-pressed={mode === "rate"}
-              onClick={() => changeMode("rate")}
-            >
-              Compare rates
-            </button>
+          <div className="comparison-toolbar">
+            <div className="mode-switch" aria-label="Comparison mode">
             <button
               aria-pressed={mode === "purchase"}
               onClick={() => changeMode("purchase")}
             >
               Buy today
             </button>
+            <button
+              aria-pressed={mode === "rate"}
+              onClick={() => changeMode("rate")}
+            >
+              Compare rates
+            </button>
+            </div>
             <div className="header-actions">
               <button className="text-button" onClick={reset}>
                 <RotateCcw size={14} />
@@ -546,11 +571,11 @@ export default function App() {
               <section className="input-section">
                 <h2>Current loan</h2>
                 <Field {...f("amount")} label="Original amount" prefix="$" />
+                <Field {...f("start")} label="First payment" type="month" />
                 <div className="field-pair">
-                  <Field {...f("rate")} label="Interest rate" suffix="%" />
+                  <RateField {...f("rate")} label="Interest rate" suffix="%" max={rateMax} />
                   <Field {...f("years")} label="Term" suffix="years" />
                 </div>
-                <Field {...f("start")} label="First payment" type="month" />
               </section>
               <section className="input-section comparison-fields">
                 <h2>{mode === "rate" ? "Alternative loan" : "New home"}</h2>
@@ -578,40 +603,12 @@ export default function App() {
                     </div>
                   </>
                 )}
-                <Field
+                <RateField
                   {...f("comparisonRate")}
                   label="Interest rate"
                   suffix="%"
+                  max={rateMax}
                 />
-                <div className="rate-slider">
-                  <input
-                    aria-label="Comparison interest rate"
-                    type="range"
-                    min="0"
-                    max={rateMax}
-                    step="0.05"
-                    value={
-                      Number.isFinite(inputs.comparisonRate)
-                        ? Math.min(rateMax, Math.max(0, inputs.comparisonRate))
-                        : 0
-                    }
-                    onChange={(e) =>
-                      setDraft((d) => ({
-                        ...d,
-                        comparisonRate: e.target.value,
-                      }))
-                    }
-                    style={
-                      {
-                        "--fill": `${(Number.isFinite(inputs.comparisonRate) ? inputs.comparisonRate / rateMax : 0) * 100}%`,
-                      } as React.CSSProperties
-                    }
-                  />
-                  <div className="range-labels">
-                    <span>0%</span>
-                    <span>{rateMax}%</span>
-                  </div>
-                </div>
                 <Field
                   {...f(mode === "rate" ? "comparisonYears" : "newYears")}
                   label="Term"

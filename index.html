@@ -7,6 +7,29 @@
     <meta name="description" content="Compare your current mortgage with a new home. See monthly payments, principal, interest, and total interest side by side." />
     <link rel="canonical" href="https://amortization.lol/" />
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Nunito:wght@400;500;600;700;800&display=swap" />
+    <script>
+      const fontStylesheet = document.querySelector('link[href*="Fredoka"]');
+      const stylesheetReady = new Promise((resolve) => {
+        if (!fontStylesheet || fontStylesheet.sheet) resolve();
+        else {
+          fontStylesheet.addEventListener('load', resolve, { once: true });
+          fontStylesheet.addEventListener('error', resolve, { once: true });
+          window.setTimeout(resolve, 2000);
+        }
+      });
+      Promise.all([
+        stylesheetReady,
+        new Promise((resolve) => window.setTimeout(resolve, 500)),
+      ]).then(() => {
+        Promise.all([
+          document.fonts.load('700 1em Fredoka'),
+          document.fonts.load('500 1em Nunito'),
+        ]).then(() => document.documentElement.classList.add('fonts-ready'));
+      });
+    </script>
     <title>amortization.lol — Mortgage comparison</title>
     <meta property="og:type" content="website" />
     <meta property="og:site_name" content="amortization.lol" />

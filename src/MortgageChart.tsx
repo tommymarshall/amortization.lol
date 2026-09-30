@@ -4,7 +4,7 @@ import { compactMoney, formatMonth, money, type ChartView, type Comparison, type
 import { chartValue as sample } from './chart';
 
 interface Props { data: Comparison; view: ChartView; selected: number; onSelect: (month: number) => void; today: number; mode: Mode }
-const GOLD = '#9d7827', LILAC = '#8467aa';
+const GOLD = '#f08a3c', LILAC = '#6c5ce7';
 const SAMPLES = 360;
 const PAD = { left: 60, right: 20, top: 116, bottom: 42 };
 
