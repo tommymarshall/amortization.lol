@@ -7,6 +7,7 @@ interface Props { data: Comparison; view: ChartView; selected: number; onSelect:
 const GOLD = '#f08a3c', LILAC = '#6c5ce7';
 const SAMPLES = 360;
 const PAD = { left: 60, right: 20, top: 116, bottom: 42 };
+const PAYMENT_DASH = 8, PAYMENT_GAP = 4;
 
 export default function MortgageChart({ data, view, selected, onSelect, today, mode }: Props) {
   const host = useRef<HTMLDivElement>(null);
@@ -117,6 +118,14 @@ export default function MortgageChart({ data, view, selected, onSelect, today, m
         const geometry = trackGeometry(new THREE.BufferGeometry());
         geometry.setAttribute('position', new THREE.BufferAttribute(positions(), 3)); geometry.setIndex(index());
         const mat = trackMaterial(new THREE.MeshBasicMaterial({ color, transparent: true, opacity, depthWrite: false, side: THREE.DoubleSide }));
+        if (view === 'payment' && series < 2) {
+          // Dash every glow layer in chart pixels, preserving the existing ribbon geometry.
+          mat.onBeforeCompile = shader => {
+            shader.vertexShader = `varying float vLineDistance;\n${shader.vertexShader.replace('#include <begin_vertex>', `#include <begin_vertex>\nvLineDistance = position.x - ${PAD.left.toFixed(1)};`)}`;
+            shader.fragmentShader = `varying float vLineDistance;\n${shader.fragmentShader.replace('#include <clipping_planes_fragment>', `#include <clipping_planes_fragment>\nif (mod(vLineDistance, ${(PAYMENT_DASH + PAYMENT_GAP).toFixed(1)}) >= ${PAYMENT_DASH.toFixed(1)}) discard;`)}`;
+          };
+          mat.customProgramCacheKey = () => 'monthly-payment-guide';
+        }
         const strip = new THREE.Mesh(geometry, mat); strip.position.z = 4; scene.add(strip);
         strips.push({ geometry, series, thickness });
       }
@@ -218,7 +227,7 @@ export default function MortgageChart({ data, view, selected, onSelect, today, m
       {dateTicks.map(t => <text key={t} x={x(t * data.horizon)} y={height - 13} textAnchor={t === 0 ? 'start' : t === 1 ? 'end' : 'middle'}>{formatMonth(data.start + Math.round(t * data.horizon), true).split(' ')[1]}</text>)}
       {todayOffset >= 0 && todayOffset < data.horizon && <g className="today-marker"><line x1={x(todayOffset)} x2={x(todayOffset)} y1={PAD.top} y2={height - PAD.bottom} strokeDasharray="2 5"/><text x={Math.max(PAD.left + 17, x(todayOffset))} y={PAD.top - 12} textAnchor="middle">TODAY</text></g>}
       {!webgl && <path d={fallbackGap()} fill={LILAC} fillOpacity=".14"/>}
-      {!webgl && (['alternate', 'current'] as const).map((loan, i) => <g key={loan}><path d={fallbackArea(loan)} fill={`url(#chart-${i ? 'gold' : 'lilac'})`}/><path d={fallbackPath(loan)} stroke={i ? GOLD : LILAC} strokeWidth="2" fill="none"/>{view === 'payment' && <path d={fallbackPath(loan, true)} stroke={i ? GOLD : LILAC} strokeWidth="1.5" strokeDasharray="4 4" fill="none"/>}</g>)}
+      {!webgl && (['alternate', 'current'] as const).map((loan, i) => <g key={loan}><path d={fallbackArea(loan)} fill={`url(#chart-${i ? 'gold' : 'lilac'})`}/><path d={fallbackPath(loan)} stroke={i ? GOLD : LILAC} strokeWidth="2" strokeDasharray={view === 'payment' ? `${PAYMENT_DASH} ${PAYMENT_GAP}` : undefined} fill="none"/>{view === 'payment' && <path d={fallbackPath(loan, true)} stroke={i ? GOLD : LILAC} strokeWidth="1.5" strokeDasharray="4 4" fill="none"/>}</g>)}
     </svg>
     <canvas ref={canvas} className="chart-canvas" aria-hidden="true" style={{ opacity: webgl ? 1 : 0 }}/>
     {largestGap / ceiling * plotH > 2 && <svg className="chart-annotation" width={width} height={height} aria-hidden="true">

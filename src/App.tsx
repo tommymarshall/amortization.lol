@@ -774,6 +774,12 @@ export default function App() {
                             : inputs.newYears}
                           y
                         </span>
+                        {view === "payment" && (
+                          <span className="payment-legend-key">
+                            <i className="legend-line monthly-payment-line" aria-hidden="true" />
+                            Monthly payment
+                          </span>
+                        )}
                       </div>
                       <p className="chart-cost-note">
                         {view === "balance"
