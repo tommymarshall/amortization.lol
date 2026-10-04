@@ -884,7 +884,7 @@ export default function App() {
                       />
                       <PaymentCard
                         kind="alternate"
-                        title={alternateTitle}
+                        title={mode === "rate" ? alternateTitle : "New"}
                         rate={inputs.comparisonRate}
                         payment={alternate}
                         maxPayment={Math.max(current.total, alternate.total)}
