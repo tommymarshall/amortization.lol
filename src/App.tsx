@@ -574,70 +574,82 @@ export default function App() {
             <aside className="inputs-panel" aria-label="Mortgage inputs">
               <section className="input-section">
                 <h2>Current loan</h2>
-                <Field {...f("amount")} label="Original amount" prefix="$" />
-                <Field {...f("start")} label="First payment" type="month" />
-                <div className="field-pair">
+                <div className="field-grid">
+                  <Field {...f("amount")} label="Original amount" prefix="$" />
+                  <Field {...f("start")} label="First payment" type="month" />
                   <RateField {...f("rate")} label="Interest rate" suffix="%" max={rateMax} />
                   <Field {...f("years")} label="Term" suffix="years" />
                 </div>
               </section>
               <section className="input-section comparison-fields">
                 <h2>{mode === "rate" ? "Alternative loan" : "New home"}</h2>
-                {mode === "purchase" && (
-                  <>
-                    <Field {...f("price")} label="Purchase price" prefix="$" />
-                    <Field
-                      {...f("downPayment")}
-                      label="Down payment"
-                      prefix="$"
-                      hint={
-                        Number.isFinite(inputs.downPayment / inputs.price)
-                          ? `${((inputs.downPayment / inputs.price) * 100).toFixed(0)}% · ${inputs.price > inputs.downPayment ? `${compactLoanAmount(inputs.price - inputs.downPayment)} loan` : "—"}`
-                          : undefined
-                      }
-                    />
-                  </>
-                )}
-                <RateField
-                  {...f("comparisonRate")}
-                  label="Interest rate"
-                  suffix="%"
-                  max={rateMax}
-                />
-                <Field
-                  {...f(mode === "rate" ? "comparisonYears" : "newYears")}
-                  label="Term"
-                  suffix="years"
-                  placeholder={mode === "rate" ? draft.years : undefined}
-                  hint={
-                    mode === "rate" && !draft.comparisonYears.trim()
-                      ? "Same as current"
-                      : undefined
-                  }
-                />
-              </section>
-              <section
-                className="housing-controls"
-                aria-label="Additional housing costs"
-              >
-                <label className="housing-toggle">
-                  <input
-                    type="checkbox"
-                    checked={includeHousingCosts}
-                    onChange={(e) => setIncludeHousingCosts(e.target.checked)}
-                    aria-describedby={
-                      includeHousingCosts ? "housing-assumptions" : undefined
+                <div className="field-grid">
+                  {mode === "purchase" && (
+                    <>
+                      <Field {...f("price")} label="Purchase price" prefix="$" />
+                      <Field
+                        {...f("downPayment")}
+                        label="$ Down"
+                        prefix="$"
+                        hint={
+                          Number.isFinite(inputs.downPayment / inputs.price)
+                            ? `${((inputs.downPayment / inputs.price) * 100).toFixed(0)}% · ${inputs.price > inputs.downPayment ? `${compactLoanAmount(inputs.price - inputs.downPayment)} loan` : "—"}`
+                            : undefined
+                        }
+                      />
+                    </>
+                  )}
+                  <RateField
+                    {...f("comparisonRate")}
+                    label="Interest rate"
+                    suffix="%"
+                    max={rateMax}
+                  />
+                  <Field
+                    {...f(mode === "rate" ? "comparisonYears" : "newYears")}
+                    label="Term"
+                    suffix="years"
+                    placeholder={mode === "rate" ? draft.years : undefined}
+                    hint={
+                      mode === "rate" && !draft.comparisonYears.trim()
+                        ? "Same as current"
+                        : undefined
                     }
                   />
-                  <span>Include taxes &amp; insurance</span>
-                </label>
+                </div>
+              </section>
+              <div className="housing-controls">
+                <div className="input-options">
+                  <label className="housing-toggle">
+                    <input
+                      type="checkbox"
+                      checked={includeHousingCosts}
+                      onChange={(e) => setIncludeHousingCosts(e.target.checked)}
+                      aria-describedby={
+                        includeHousingCosts ? "housing-assumptions" : undefined
+                      }
+                    />
+                    <span>Include taxes &amp; insurance</span>
+                  </label>
+                  <label className="remember">
+                    <input
+                      type="checkbox"
+                      checked={remember}
+                      onChange={(e) => {
+                        storageTouched.current = true;
+                        setRemember(e.target.checked);
+                      }}
+                    />
+                    <span>Save on this device</span>
+                  </label>
+                </div>
                 {includeHousingCosts && (
                   <>
                     <p id="housing-assumptions" className="input-note">
                       {(HOUSING_ASSUMPTIONS.propertyTaxRate * 100).toFixed(1)}%
                       annual tax ·{" "}
                       {money(HOUSING_ASSUMPTIONS.annualInsurance / 12)}/mo
-                      insurance default
+                      insurance default · Auto home value assumes 20% down
                     </p>
                     <div className="housing-value">
                       <Field
@@ -656,9 +668,6 @@ export default function App() {
                             : "Auto estimate"
                         }
                       />
-                      <p className="input-note">
-                        Auto estimate assumes 20% down.
-                      </p>
                       <Field
                         {...f("annualInsurance")}
                         label="Current insurance"
@@ -684,18 +693,7 @@ export default function App() {
                     </div>
                   </>
                 )}
-              </section>
-              <label className="remember">
-                <input
-                  type="checkbox"
-                  checked={remember}
-                  onChange={(e) => {
-                    storageTouched.current = true;
-                    setRemember(e.target.checked);
-                  }}
-                />
-                <span>Save on this device</span>
-              </label>
+              </div>
               {saveError && (
                 <p className="field-message">Couldn’t save your inputs.</p>
               )}

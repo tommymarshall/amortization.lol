@@ -43,7 +43,7 @@ h1, h2, h3, p { margin: 0; }
 h1, h2, h3 { font-family: var(--serif); font-weight: 600; letter-spacing: -.01em; }
 button, a, input { touch-action: manipulation; }
 strong { font-weight: 500; }
-.app { max-width: 1600px; margin: 0 auto; padding: 0 64px; }
+.app { max-width: 1240px; margin: 0 auto; padding: 0 64px; }
 main { padding-bottom: 18px; }
 
 /* Site title and page controls */
@@ -63,10 +63,13 @@ main { padding-bottom: 18px; }
 .header-actions .text-button { white-space: nowrap; }
 
 /* Loan inputs */
-.workspace { display: grid; grid-template-columns: 280px minmax(0, 1fr); gap: 48px; padding-top: 36px; }
-.inputs-panel { min-width: 0; padding-right: 28px; border-right: 1px solid var(--rule); }
-.input-section { padding-bottom: 27px; margin-bottom: 25px; border-bottom: 1px solid var(--rule); }
-.input-section h2 { font-size: 32px; line-height: 1.1; margin-bottom: 23px; }
+.workspace { display: grid; gap: 32px; padding-top: 30px; }
+.inputs-panel { min-width: 0; display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 20px 24px; }
+.input-section { min-width: 0; padding: 22px 26px 24px; background: #fcfbf8; border: 1px solid #e8e6df; border-radius: 22px; }
+.input-section h2 { font-size: 28px; line-height: 1.1; margin-bottom: 16px; }
+.field-grid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 16px 20px; align-items: start; }
+.field-grid .field, .field-grid .rate-field .field { margin-bottom: 0; }
+.field-grid .rate-slider { margin: -4px 0 0; }
 .field { margin-bottom: 19px; }
 .field:last-child { margin-bottom: 0; }
 .field label { display: flex; justify-content: space-between; align-items: baseline; gap: 8px; font-size: 12px; line-height: 1.5; color: #62675e; }
@@ -79,17 +82,14 @@ main { padding-bottom: 18px; }
 .input-shell input[type=month]::-webkit-calendar-picker-indicator { width: 15px; margin-left: 2px; opacity: .55; cursor: pointer; }
 .input-affix { font-size: 19px; color: var(--muted); padding-right: 9px; }
 .input-affix.suffix { font-size: 12px; white-space: nowrap; padding: 0 0 0 6px; }
-.field-pair { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
-.field-pair .field { margin-bottom: 19px; }
-.comparison-fields:has(#comparisonYears) { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); column-gap: 20px; }
-.comparison-fields:has(#comparisonYears) > h2 { grid-column: 1 / -1; }
-.comparison-fields:has(#comparisonYears) > .rate-field { grid-column: 1; }
-.comparison-fields:has(#comparisonYears) > .field:has(#comparisonYears) { grid-column: 2; }
 .input-note { color: var(--muted); font-size: 11px; line-height: 1.65; margin: 9px 0 20px; }
-.housing-controls { margin-bottom: 22px; }
+.housing-controls, .inputs-panel > .field-message { grid-column: 1 / -1; }
+.input-options { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 8px 24px; padding: 0 4px; }
+.housing-controls .input-note { margin: 10px 4px 14px; }
 .housing-toggle, .remember { display: flex; align-items: flex-start; gap: 10px; font-size: 12px; line-height: 1.6; cursor: pointer; }
 .housing-toggle input, .remember input { accent-color: var(--ink); width: 15px; height: 15px; flex-shrink: 0; margin: 2px 0 0; }
-.housing-value { margin-top: 18px; }
+.housing-value { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px 24px; padding: 0 4px; }
+.housing-value .field { margin-bottom: 0; }
 .housing-value .input-shell input { font-size: 18px; }
 .remember { color: var(--muted); font-size: 11px; }
 .field-error .input-shell { border-color: #a53d2b; }
@@ -224,7 +224,7 @@ main { padding-bottom: 18px; }
 .empty-state p { font-size: 14px; color: var(--muted); margin-top: 15px; }
 
 /* Totals */
-.big-picture { display: grid; grid-template-columns: 280px 1fr 1fr; column-gap: 48px; margin-top: 54px; padding: 30px 0 42px; border-top: 2px solid var(--ink); }
+.big-picture { display: grid; grid-template-columns: 270px 1fr 1fr; column-gap: 48px; margin-top: 54px; padding: 30px 0 42px; border-top: 2px solid var(--ink); }
 .big-picture-heading h2 { font-size: 40px; }
 .big-picture-heading > span { display: block; font-size: 12px; color: var(--muted); margin-top: 10px; }
 .interest-summary h3, .payoff-summary h3 { font-size: 30px; margin: 4px 0 22px; }
@@ -270,17 +270,13 @@ dialog::backdrop { background: #101a2b99; backdrop-filter: blur(3px); }
 }
 
 @media (min-width: 1450px) {
-  .workspace { grid-template-columns: 310px minmax(0, 1fr); gap: 56px; }
-  .inputs-panel { padding-right: 38px; }
-  .big-picture { grid-template-columns: 310px 1fr 1fr; gap: 56px; }
   .comparison-figure { padding: 34px 38px 25px; }
 }
 @media (max-width: 1120px) {
   .app { padding: 0 36px; }
-  .workspace { grid-template-columns: 238px minmax(0, 1fr); gap: 30px; }
   .content-card { padding: 30px 30px 36px; }
-  .inputs-panel { padding-right: 21px; }
-  .input-section h2 { font-size: 29px; }
+  .input-section { padding: 20px 22px 22px; }
+  .input-section h2 { font-size: 26px; }
   .comparison-figure { padding: 27px 24px 20px; }
   .result-headline h2 { font-size: 57px; }
   .payment-cards { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 18px 24px; }
@@ -289,17 +285,16 @@ dialog::backdrop { background: #101a2b99; backdrop-filter: blur(3px); }
   .payment-card-title h3 { font-size: 26px; }
   .payment-number { font-size: 43px; }
   .payment-components strong { font-size: 14px; }
-  .big-picture { grid-template-columns: 238px 1fr 1fr; gap: 30px; }
+  .big-picture { grid-template-columns: 200px 1fr 1fr; gap: 30px; }
   .interest-summary > div strong, .payoff-summary > div strong { font-size: 18px; }
 }
 @media (max-width: 860px) {
   .app { padding: 0 25px; }
   .page-heading { padding: 49px 0 25px; }
   .page-heading h1 { font-size: 66px; }
-  .workspace { grid-template-columns: 210px minmax(0, 1fr); gap: 23px; padding-top: 28px; }
-  .inputs-panel { padding-right: 18px; }
-  .input-section h2 { font-size: 27px; }
-  .field-pair { gap: 12px; }
+  .workspace { gap: 26px; padding-top: 26px; }
+  .inputs-panel { grid-template-columns: minmax(0, 1fr); gap: 16px; }
+  .input-section h2 { font-size: 25px; }
   .field label { font-size: 11px; }
   .input-affix.suffix { font-size: 10px; }
   .comparison-figure { padding: 23px 19px 17px; }
@@ -331,28 +326,17 @@ dialog::backdrop { background: #101a2b99; backdrop-filter: blur(3px); }
   .mode-switch { column-gap: 29px; }
   .mode-switch > button { font-size: 15px; }
   .header-actions { gap: 18px; }
-  .workspace { display: flex; flex-direction: column; gap: 28px; padding-top: 26px; }
-  .inputs-panel { border: 0; padding: 0; display: grid; grid-template-columns: 1fr 1fr; gap: 0 25px; }
-  .input-section { margin-bottom: 20px; padding-bottom: 22px; }
-  .input-section h2 { font-size: 29px; margin-bottom: 20px; }
-  .field-pair { grid-template-columns: 1fr; gap: 0; }
-  .field { margin-bottom: 18px; }
-  .field-pair .field { margin-bottom: 18px; }
+  .input-section { padding: 18px 18px 20px; border-radius: 18px; }
+  .field-grid { column-gap: 14px; }
   .input-shell input { font-size: 20px; }
   .input-shell input[type=month] { font-size: 16px; }
   .field label { font-size: 12px; }
-  .housing-controls, .remember, .inputs-panel > .field-message { grid-column: 1 / -1; }
-  .housing-controls { margin-bottom: 15px; }
   .housing-toggle { align-items: center; min-height: 32px; font-size: 13px; }
   .housing-toggle input { margin-top: 0; }
-  .housing-value { display: grid; grid-template-columns: 1fr 1fr; column-gap: 25px; }
-  .housing-value > .input-note { grid-column: 1; grid-row: 2; margin-top: -7px; }
-  .housing-value > .field:nth-of-type(2) { grid-column: 2; grid-row: 1; }
-  .housing-value > .field:nth-of-type(3) { grid-column: 2; grid-row: 2 / 4; }
+  .housing-value { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); column-gap: 14px; }
   .remember { min-height: 30px; align-items: center; font-size: 12px; }
   .remember input { margin-top: 0; }
   .comparison-figure { padding: 26px 22px 18px; }
-  .inputs-panel:has(.comparison-fields #comparisonYears) .comparison-fields { grid-column: 1 / -1; }
   .result-headline h2 { font-size: clamp(46px, 9vw, 64px); }
   .chart-legend { font-size: 12px; }
   .chart-tabs button { font-size: 14px; }
@@ -389,10 +373,11 @@ dialog::backdrop { background: #101a2b99; backdrop-filter: blur(3px); }
   .header-actions .text-button { font-size: 11px; }
   .header-actions .text-button > svg { width: 12px; }
   .page-heading h1 { font-size: clamp(32px, 10vw, 42px); }
-  .inputs-panel { grid-template-columns: repeat(auto-fit, minmax(min(100%, 140px), 1fr)); column-gap: 20px; }
-  .input-section h2 { font-size: 26px; }
+  .input-section { padding: 16px 14px 18px; }
+  .input-section h2 { font-size: 24px; }
   .field label { font-size: 11px; }
-  .input-shell input[type=month] { font-size: 14px; }
+  .input-shell input[type=month] { font-size: 13px; }
+  .input-shell input[type=month]::-webkit-calendar-picker-indicator { display: none; }
   .comparison-figure { padding: 23px 15px 17px; }
   .result-headline h2 { font-size: 47px; }
   .result-headline .per-month { font-size: 12px; }
