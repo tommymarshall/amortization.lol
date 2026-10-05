@@ -529,7 +529,7 @@ export default function App() {
       <main>
         <div className="page-heading">
           <h1>amortization.lol</h1>
-          <p>This is why you'll never leave your house</p>
+          <p>Why you&apos;ll (probably) never leave your home</p>
         </div>
         {sharedAsOf && (
           <p className="shared-notice">
@@ -539,7 +539,7 @@ export default function App() {
         )}
         {invalidShare && (
           <p className="shared-notice" role="status">
-            This comparison link couldn’t be read. Check the inputs before
+            This comparison link couldn&apos;t be read. Check the inputs before
             sharing again.
           </p>
         )}
@@ -695,7 +695,7 @@ export default function App() {
                 )}
               </div>
               {saveError && (
-                <p className="field-message">Couldn’t save your inputs.</p>
+                <p className="field-message">Couldn&apos;t save your inputs.</p>
               )}
             </aside>
             <div className="results-panel">
@@ -1031,7 +1031,7 @@ export default function App() {
               target="_blank"
               rel="noreferrer"
             >
-              ATTOM’s 2025 national effective rate
+              ATTOM&apos;s 2025 national effective rate
             </a>
             . Home value defaults to the original loan ÷ 80%; a new home uses
             its purchase price.
@@ -1046,7 +1046,7 @@ export default function App() {
               target="_blank"
               rel="noreferrer"
             >
-              Virginia’s average HO-3 premium was $1,537 in 2023
+              Virginia&apos;s average HO-3 premium was $1,537 in 2023
             </a>
             .
           </p>
